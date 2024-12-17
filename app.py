@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS 
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -8,6 +9,7 @@ from sklearn.metrics import r2_score
 import joblib
 
 app = Flask(__name__)
+CORS(app, resources={r"/predict": {"origins": "*"}})
 
 # ------------------- Data Preparation and Model Training ------------------- #
 
@@ -55,15 +57,20 @@ df = df.dropna(subset=['Salary'])
 
 # ------------------- Encode Categorical Features ------------------- #
 
+# Explicit categories for Gender
 label_encoder_gender = LabelEncoder()
-label_encoder_gender.fit(['Male', 'Female', 'Unknown'])  # Explicit categories for Gender
+label_encoder_gender.fit(['Male', 'Female', 'Unknown'])
 
+# Explicit categories for Education Level (including 'Bachelor's' and 'Master's')
 label_encoder_edu = LabelEncoder()
+label_encoder_edu.fit(["Bachelor's", "Master's", "PhD", 'Unknown'])  # Include Bachelor's and Master's
+
+# Job level and job field encoding
 label_encoder_job_level = LabelEncoder()
 label_encoder_job_field = LabelEncoder()
 
 df['Gender'] = label_encoder_gender.transform(df['Gender'])
-df['Education Level'] = label_encoder_edu.fit_transform(df['Education Level'])
+df['Education Level'] = label_encoder_edu.transform(df['Education Level'])
 df['Job_Level'] = label_encoder_job_level.fit_transform(df['Job_Level'])
 df['Job_Field'] = label_encoder_job_field.fit_transform(df['Job_Field'])
 
