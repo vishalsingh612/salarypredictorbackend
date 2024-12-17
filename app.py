@@ -12,9 +12,7 @@ app = Flask(__name__)
 CORS(app, resources={r"/predict": {"origins": "*"}})
 
 # ------------------- Data Preparation and Model Training ------------------- #
-
-# Load your dataset (replace 'your_file.csv' with the actual file path)
-df = pd.read_csv('/Users/vishu/Downloads/Salary_Data.csv')
+df = pd.read_csv('./Salary_Data.csv')
 
 # Function to classify job titles into Job_Level and Job_Field
 def classify_job(title):
